@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 
 # Load the trained model
-model_path = '/mnt/data/email_spam.pkl'
+model_path = 'email_spam.pkl'
 model = joblib.load(model_path)
 
 # Load the email dataset
