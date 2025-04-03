@@ -1,10 +1,8 @@
 import streamlit as st
-import pandas as pd
 import joblib
 
-# Load the trained model and the vectorizer
+# Load the trained model
 model_path = 'email_spam.pkl'
- # Assuming you saved your vectorizer
 model = joblib.load(model_path)
 
 # Streamlit UI
@@ -16,11 +14,8 @@ email_text = st.text_area("Enter Email Text:")
 
 if st.button("Classify Email"):
     if email_text.strip():
-        # Transform the email text into a feature vector using the vectorizer
-        email_vector = vectorizer.transform([email_text])  # This creates a 2D array
-
-        # Make prediction using the model
-        prediction = model.predict(email_vector)
+        # Directly pass the raw text to the model (if it accepts raw text)
+        prediction = model.predict([email_text])  # Pass the email as a list for batch processing
 
         # Display the result
         result = "Spam" if prediction[0] == 1 else "Not Spam"
