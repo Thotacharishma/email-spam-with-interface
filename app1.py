@@ -4,9 +4,8 @@ import joblib
 
 # Load the trained model and the vectorizer
 model_path = 'email_spam.pkl'
-vectorizer_path = 'vectorizer.pkl'  # Assuming you saved your vectorizer
+ # Assuming you saved your vectorizer
 model = joblib.load(model_path)
-vectorizer = joblib.load(vectorizer_path)
 
 # Streamlit UI
 st.title("Email Spam Classifier")
