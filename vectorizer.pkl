@@ -1,0 +1,2 @@
+joblib.dump(vectorizer, 'vectorizer.pkl')
+joblib.dump(model, 'email_spam.pkl')
