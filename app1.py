@@ -1,24 +1,32 @@
 import streamlit as st
 import joblib
+import os
 
 # Load the trained model
 model_path = 'email_spam.pkl'
-model = joblib.load(model_path)
+
+if os.path.exists(model_path):
+    model = joblib.load(model_path)
+    st.success("Model loaded successfully.")
+else:
+    st.error(f"Model file not found at {model_path}. Please upload it.")
+    st.stop()
 
 # Streamlit UI
-st.title("Email Spam Classifier")
-st.write("Upload an email dataset or enter text to classify.")
+st.title("📧 Email Spam Classifier")
+st.write("Enter your email content below and classify it as Spam or Not Spam.")
 
 # Email input
-email_text = st.text_area("Enter Email Text:")
+email_text = st.text_area("✍️ Enter Email Text:", height=200)
 
-if st.button("Classify Email"):
+# Prediction
+if st.button("🚀 Classify Email"):
     if email_text.strip():
-        # Directly pass the raw text to the model (if it accepts raw text)
-        prediction = model.predict([email_text])  # Pass the email as a list for batch processing
-
-        # Display the result
-        result = "Spam" if prediction[0] == 1 else "Not Spam"
-        st.write(f"### Classification: {result}")
+        try:
+            prediction = model.predict([email_text])  # Pass as list for model
+            result = "Spam" if prediction[0] == 1 else "Not Spam"
+            st.success(f"🧠 Classification Result: **{result}**")
+        except Exception as e:
+            st.error(f"Error during prediction: {e}")
     else:
-        st.write("Please enter some text to classify.")
+        st.warning("Please enter some text before classifying.")
