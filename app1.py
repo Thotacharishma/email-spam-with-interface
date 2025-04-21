@@ -2,7 +2,7 @@ import streamlit as st
 import joblib
 
 # Load trained model
-model = joblib.load("email_spam.pkl")
+model = joblib.load("email_spam.pkl")  
 
 st.title("📧 Spam Mail Detector")
 
