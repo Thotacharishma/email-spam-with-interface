@@ -1,23 +1,41 @@
 import streamlit as st
 import joblib
+import numpy as np
+import pandas as pd
 
-# Load the model and vectorizer
-model = joblib.load("email_spam.pkl")
+# Load the vectorizer and model
 vectorizer = joblib.load("vectorizer.pkl")
+model = joblib.load("email_spam.pkl")
 
-st.title("📧 Spam Mail Detector")
+# Streamlit app layout
+st.set_page_config(page_title="Email/SMS Spam Classifier", layout="centered")
+st.title("📧 Email & SMS Spam Classifier")
 
-# User input
-email_text = st.text_area("Enter your email content:")
+st.markdown("Enter a message below to check if it's spam or not:")
 
-if st.button("Predict"):
-    if email_text.strip() == "":
-        st.error("Please enter an email before predicting.")
+# Text input
+user_input = st.text_area("Message", height=150)
+
+# Predict button
+if st.button("Classify"):
+    if user_input.strip() == "":
+        st.warning("Please enter a message to classify.")
     else:
-        st.write(f"🔍 **Input Received:** {email_text}")
-        
-        transformed_text = vectorizer.transform([email_text])
-        prediction = model.predict(transformed_text)[0]
-        
-        label = "Spam" if prediction == 1 else "Ham"
-        st.success(f"📩 **Predicted Label:** {label}")
+        # Vectorize and predict
+        input_data = vectorizer.transform([user_input])
+        prediction = model.predict(input_data)[0]
+        prob = model.predict_proba(input_data).max()
+
+        # Display result
+        if prediction == "spam":
+            st.error(f"🚫 Spam detected with {prob*100:.2f}% confidence.")
+        else:
+            st.success(f"✅ Ham (Not Spam) with {prob*100:.2f}% confidence.")
+
+# Optional: View some raw data from mail_data.csv
+with st.expander("📂 View Sample Data"):
+    try:
+        df = pd.read_csv("mail_data.csv")
+        st.dataframe(df.sample(5))
+    except Exception as e:
+        st.warning("Could not load mail_data.csv.")
